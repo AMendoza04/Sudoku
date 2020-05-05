@@ -1,16 +1,3 @@
-sudoku = [
-    [9,0,1,3,0,8,7,5,0],
-    [0,0,3,0,0,0,0,1,6],
-    [5,0,2,1,0,6,9,3,0],
-    [4,3,0,0,9,0,0,7,0],
-    [1,0,0,0,4,7,0,0,5],
-    [0,2,0,8,0,3,6,4,9],
-    [2,0,4,0,0,1,0,8,2],
-    [0,0,0,9,8,0,0,0,2],
-    [6,0,0,0,3,5,0,0,0]
-
-]
-
 def imprimir( sudoku ):
 
     for i in range(len( sudoku )):
@@ -89,8 +76,9 @@ def validar(sudoku, nNuevo, cuadroAct):
     #                return False
 
     #Esto saca cuál cuadro 3x3 corresponde al cuadro
-    f = cuadroAct[0] // 3
-    c = cuadroAct[1] // 3
+    f = ubicacion_cuadro( cuadroAct[0] )
+    c = ubicacion_cuadro( cuadroAct[1] )
+
     for i in range(f*3, f*3 + 3):
         for j in range(c*3, c*3 + 3):
             if (i,j) == cuadroAct:
@@ -102,8 +90,14 @@ def validar(sudoku, nNuevo, cuadroAct):
 
     return True
 
+def ubicacion_cuadro( coord ):
+    if coord < 3:
+        return 0
+    if coord < 6:
+        return 1
+    return 2
 
-def respuesta( sudoku, fileR ):
+def respuesta( sudoku ):
     cuadro = selec_cuadro( sudoku )
     if cuadro == -1:
         return True
@@ -112,60 +106,50 @@ def respuesta( sudoku, fileR ):
         c = cuadro[1]
 
     #print( f, c )
+    #Hace practicamente lo mismo que sacar las posibles opciones de esa casilla
     for i in range(1,10):
         if validar(sudoku, i, (f,c)):
             sudoku[f][c] = i
-            imprimir2(sudoku, fileR)
+            #imprimir2(sudoku, fileR)
 
-            if respuesta( sudoku, fileR ):
+            if respuesta( sudoku ):
                 return True
 
             sudoku[f][c] = 0
 
     return False
 
-def leer_sudoku1():
-    sud = []
-    fila = []
-    print( "Ingrese 0 para los espacios en blanco" )
-    for i in range(9):
-        fila.clear()
-        for j in range(9):
-            n = int( input("Ingrese el valor de la cuadro fila: " + str(i) + " columna: " + str(j) + "\n"))
-            fila.append(n)
-        sud.append( fila )
-    return sud
+def seleccionar_opciones():
 
-def leer_sudoku2( fname ):
-    arch = open( fname, "r")
-    sud = []
-    fil = []
-    for i in range(9):
-        fila = arch.readline()
-        nums = fila.split(" ")
-        for j in range(9):
-            fil.append( int(nums[j]) )
+    sudoku1 = [
+        [9,0,1,3,0,8,7,5,0],
+        [0,0,3,0,0,0,0,1,6],
+        [5,0,2,1,0,6,9,3,0],
+        [4,3,0,0,9,0,0,7,0],
+        [1,0,0,0,4,7,0,0,5],
+        [0,2,0,8,0,3,6,4,9],
+        [2,0,4,0,0,1,0,8,2],
+        [0,0,0,9,8,0,0,0,2],
+        [6,0,0,0,3,5,0,0,0]
+    ]
 
-        sud.append( fil )
-    arch.close()
-    return sud
+    sudoku2 = [
+        [9,0,1,3,0,8,7,5,0],
+        [0,0,3,0,0,0,0,1,6],
+        [5,0,2,1,0,6,9,3,0],
+        [4,3,0,0,9,0,0,7,0],
+        [1,0,0,0,4,7,0,0,5],
+        [0,2,0,8,0,3,6,4,9],
+        [2,0,4,0,0,1,0,8,2],
+        [0,0,0,9,8,0,0,0,2],
+        [6,0,0,0,3,5,0,0,0]
+    ]
+    return sudoku1
 
-name = input("Ingrese el nombre del archivo del proceso: ")
-#sudoku = []
-#op = ""
-#while op != "1" and op != "2":
-#    op = input("1. Ingresar tablero a mano\n2. Ingresar por archivo\n")
-#
-#if op == "1":
-#    sudoku = leer_sudoku1()
-#else:
-#    fname = input("Ingrese el nombre del archivo del sudoku: ")
-#    sudoku = leer_sudoku2(fname)
-
-f = open(  name ,"w" )
+sudoku = seleccionar_opciones()
 imprimir( sudoku )
-imprimir2( sudoku, f )
-respuesta( sudoku, f )
+#imprimir2( sudoku, f )
+respuesta( sudoku )
 print( "\n\n\n\nSolución del sudoku:")
 imprimir( sudoku )
-f.close()
+
